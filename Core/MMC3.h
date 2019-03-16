@@ -5,6 +5,7 @@
 #include "CPU.h"
 #include "EmulationSettings.h"
 #include "A12Watcher.h"
+#include "DebuggerTypes.h"
 
 class MMC3 : public BaseMapper
 {
@@ -145,6 +146,7 @@ class MMC3 : public BaseMapper
 
 				if (_bankswitched) {
 					LogPrgBankswitch(_registers[6], _registers[7], -2, -1);
+					_console->DebugProcessEvent(EventType::BankSwitched);
 				}
 
 			} else if(_prgMode == 1) {
@@ -155,6 +157,7 @@ class MMC3 : public BaseMapper
 
 				if (_bankswitched) {
 					LogPrgBankswitch(-2, _registers[7], _registers[6], -1);
+					_console->DebugProcessEvent(EventType::BankSwitched);
 				}
 			}
 		}

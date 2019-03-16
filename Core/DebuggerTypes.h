@@ -164,6 +164,7 @@ enum class EventType
 	InputPolled = 8,
 	SpriteZeroHit = 9,
 	ScriptEnded = 10,
+	BankSwitched = 11,
 	EventTypeSize
 };
 
