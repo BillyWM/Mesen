@@ -31,6 +31,9 @@ class MMC3 : public BaseMapper
 
 		bool _forceMmc3RevAIrqs;
 
+		// Whether a bankswitch just occured
+		bool _bankswitched;
+
 		struct Mmc3State {
 			uint8_t Reg8000;
 			uint8_t RegA000;
@@ -133,17 +136,59 @@ class MMC3 : public BaseMapper
 
 		virtual void UpdatePrgMapping()
 		{
+
 			if(_prgMode == 0) {
 				SelectPRGPage(0, _registers[6]);
 				SelectPRGPage(1, _registers[7]);
 				SelectPRGPage(2, -2);
 				SelectPRGPage(3, -1);
+
+				if (_bankswitched) {
+					LogPrgBankswitch(_registers[6], _registers[7], -2, -1);
+				}
+
 			} else if(_prgMode == 1) {
 				SelectPRGPage(0, -2);
 				SelectPRGPage(1, _registers[7]);
 				SelectPRGPage(2, _registers[6]);
 				SelectPRGPage(3, -1);
+
+				if (_bankswitched) {
+					LogPrgBankswitch(-2, _registers[7], _registers[6], -1);
+				}
 			}
+		}
+
+		// TODO: Absolute ROM values?
+		void LogPrgBankswitch(uint8_t page1, uint8_t page2, uint8_t page3, uint8_t page4)
+		{
+			stringstream _message;
+			const char* cstr;
+
+			_message << "Bankswitched ";
+			_message << std::dec;
+			if (unsigned(page1) == 254) {
+				_message << -2;
+			}
+			else {
+				_message << unsigned(page1);
+			}
+
+			_message << " " << std::dec << unsigned(page2) << " ";
+			_message << std::dec;
+			if (unsigned(page3) == 254) {
+				_message << -2;
+			}
+			else {
+				_message << unsigned(page3);
+			}
+
+			_message << " ";
+			_message << std::dec << -1;
+
+			cstr = _message.str().c_str();
+
+			_console->DebugAddTrace(cstr);
 		}
 
 		bool CanWriteToWorkRam()
@@ -183,6 +228,8 @@ class MMC3 : public BaseMapper
 
 			UpdatePrgMapping();
 			UpdateChrMapping();
+			
+			_bankswitched = false;
 		}
 
 		virtual void StreamState(bool saving) override
@@ -207,6 +254,8 @@ class MMC3 : public BaseMapper
 
 		virtual void InitMapper() override 
 		{
+			_bankswitched = false;
+
 			//Force MMC3A irqs for boards that are known to use the A revision.
 			//Some MMC3B boards also have the A behavior, but currently no way to tell them apart.
 			_forceMmc3RevAIrqs = _romInfo.DatabaseInfo.Chip.substr(0, 5).compare("MMC3A") == 0;
@@ -231,6 +280,7 @@ class MMC3 : public BaseMapper
 						value &= ~0x01;
 					}
 					_registers[_currentRegister] = value;
+					_bankswitched = true;
 					UpdateState();
 					break;
 
