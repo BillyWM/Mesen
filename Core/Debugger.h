@@ -233,6 +233,9 @@ public:
 	void ProcessInterrupt(uint16_t cpuAddr, uint16_t destCpuAddr, bool forNmi);
 	
 	void AddTrace(const char *log);
+	void AddTrace(string log);
+
+	void CustomTrace(string log);
 
 	void SetFreezeState(uint16_t address, bool frozen);
 	void GetFreezeState(uint16_t startAddress, uint16_t length, bool* freezeState);

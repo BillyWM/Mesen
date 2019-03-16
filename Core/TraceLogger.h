@@ -105,6 +105,7 @@ public:
 	void StopLogging();
 
 	void LogExtraInfo(const char *log, uint32_t cycleCount);
+	void LogCustomLine(const char *log);
 
 	const char* GetExecutionTrace(uint32_t lineCount);
 };

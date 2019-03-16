@@ -1439,3 +1439,15 @@ void Debugger::AddTrace(const char* log)
 {
 	_traceLogger->LogExtraInfo(log, _cpu->GetCycleCount());
 }
+
+void Debugger::AddTrace(string log) {
+	const char* cstr;
+	cstr = log.c_str();
+	_traceLogger->LogExtraInfo(cstr, _cpu->GetCycleCount());
+}
+
+void Debugger::CustomTrace(string log) {
+	const char* cstr;
+	cstr = log.c_str();
+	_traceLogger->LogCustomLine(cstr);
+}

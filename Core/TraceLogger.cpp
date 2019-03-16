@@ -161,6 +161,15 @@ void TraceLogger::LogExtraInfo(const char *log, uint32_t cycleCount)
 	}
 }
 
+void TraceLogger::LogCustomLine(const char *log) {
+	if (_logToFile) {
+		//Flush current buffer
+		_outputFile << _outputBuffer;
+		_outputBuffer.clear();
+		_outputFile << log << (_options.UseWindowsEol ? "\r\n" : "\n");
+	}
+}
+
 void TraceLogger::GetStatusFlag(string &output, uint8_t ps, RowPart& part)
 {
 	if(part.DisplayInHex) {

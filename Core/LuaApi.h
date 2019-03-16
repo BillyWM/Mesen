@@ -40,6 +40,7 @@ public:
 	static int GetMouseState(lua_State *lua);
 
 	static int Log(lua_State *lua);
+	static int TraceLog(lua_State *lua);
 	static int DisplayMessage(lua_State *lua);
 	
 	static int Reset(lua_State *lua);

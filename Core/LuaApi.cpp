@@ -80,6 +80,7 @@ int LuaApi::GetLibrary(lua_State *lua)
 		{ "getPixel", LuaApi::GetPixel },
 		{ "getMouseState", LuaApi::GetMouseState },
 		{ "log", LuaApi::Log },
+		{ "traceLog", LuaApi::TraceLog },
 		{ "displayMessage", LuaApi::DisplayMessage },
 		{ "reset", LuaApi::Reset },
 	   { "stop", LuaApi::Stop },
@@ -493,6 +494,18 @@ int LuaApi::Log(lua_State *lua)
 	_context->Log(text);
 	return l.ReturnCount();
 }
+
+int LuaApi::TraceLog(lua_State *lua)
+{
+	LuaCallHelper l(lua);
+	string text = l.ReadString();
+	checkparams();
+	
+	_debugger->CustomTrace(text);
+
+	return l.ReturnCount();
+}
+
 
 int LuaApi::DisplayMessage(lua_State *lua)
 {
