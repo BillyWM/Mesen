@@ -140,9 +140,13 @@ namespace Mesen.GUI.Debugger
 		{
 			if(!chkOverrideFormat.Checked) {
 				string format = "[PC,h] ";
+
 				if(chkShowByteCode.Checked) {
 					format += "[ByteCode,11h] ";
 				}
+
+				format += "[ROMPC,6h] ";
+
 				format += "[Disassembly]";
 				int alignValue = 40;
 				if(chkShowEffectiveAddresses.Checked) {

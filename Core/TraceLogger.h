@@ -18,6 +18,7 @@ enum class RowDataType
 	MemoryValue,
 	Align,
 	PC,
+	ROMPC,
 	A,
 	X,
 	Y,

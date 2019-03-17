@@ -67,6 +67,8 @@ void TraceLogger::SetOptions(TraceLoggerOptions options)
 
 	_rowParts.clear();
 
+	//string absoluteROMAddress = HexUtilities::ToHex(_memoryManager->ToAbsolutePrgAddress(cpuState.DebugPC));
+
 	std::regex formatRegex = std::regex("(\\[\\s*([^[]*?)\\s*(,\\s*([\\d]*)\\s*(h){0,1}){0,1}\\s*\\])|([^[]*)", std::regex_constants::icase);
 	std::sregex_iterator start = std::sregex_iterator(format.cbegin(), format.cend(), formatRegex);
 	std::sregex_iterator end = std::sregex_iterator();
@@ -93,8 +95,10 @@ void TraceLogger::SetOptions(TraceLoggerOptions options)
 				part.DataType = RowDataType::MemoryValue;
 			} else if(dataType == "Align") {
 				part.DataType = RowDataType::Align;
-			} else if(dataType == "PC") {
+			} else if (dataType == "PC") {
 				part.DataType = RowDataType::PC;
+			} else if(dataType == "ROMPC") {
+				part.DataType = RowDataType::ROMPC;
 			} else if(dataType == "A") {
 				part.DataType = RowDataType::A;
 			} else if(dataType == "X") {
@@ -193,6 +197,10 @@ void TraceLogger::GetStatusFlag(string &output, uint8_t ps, RowPart& part)
 void TraceLogger::GetTraceRow(string &output, State &cpuState, PPUDebugState &ppuState, DisassemblyInfo &disassemblyInfo)
 {
 	int originalSize = (int)output.size();
+	uint32_t absolute = cpuState.DebugPC > 0x07FF ? _memoryManager->ToAbsolutePrgAddress(cpuState.DebugPC) : 0xFFFFFFFF;
+	RowPart altPart;
+	altPart.DataType = RowDataType::Text;
+
 	for(RowPart& rowPart : _rowParts) {
 		switch(rowPart.DataType) {
 			case RowDataType::Text: output += rowPart.Text; break;
@@ -246,6 +254,16 @@ void TraceLogger::GetTraceRow(string &output, State &cpuState, PPUDebugState &pp
 				break;
 
 			case RowDataType::PC: WriteValue(output, cpuState.DebugPC, rowPart); break;
+			case RowDataType::ROMPC:
+				if (absolute != 0xFFFFFFFF) {
+					WriteValue(output, absolute, rowPart);
+				} else {
+					altPart.Text = "";
+					altPart.DisplayInHex = false;
+					altPart.MinWidth = rowPart.MinWidth;
+					WriteValue(output, absolute, altPart);
+				}
+				break;
 			case RowDataType::A: WriteValue(output, cpuState.A, rowPart); break;
 			case RowDataType::X: WriteValue(output, cpuState.X, rowPart); break;
 			case RowDataType::Y: WriteValue(output, cpuState.Y, rowPart); break;
