@@ -197,7 +197,7 @@ void TraceLogger::GetStatusFlag(string &output, uint8_t ps, RowPart& part)
 void TraceLogger::GetTraceRow(string &output, State &cpuState, PPUDebugState &ppuState, DisassemblyInfo &disassemblyInfo)
 {
 	int originalSize = (int)output.size();
-	uint32_t absolute = cpuState.DebugPC > 0x07FF ? _memoryManager->ToAbsolutePrgAddress(cpuState.DebugPC) : 0xFFFFFFFF;
+	int32_t absolute = cpuState.DebugPC > 0x07FF ? _memoryManager->ToAbsolutePrgAddress(cpuState.DebugPC) : -1;
 	RowPart altPart;
 	altPart.DataType = RowDataType::Text;
 
@@ -255,13 +255,13 @@ void TraceLogger::GetTraceRow(string &output, State &cpuState, PPUDebugState &pp
 
 			case RowDataType::PC: WriteValue(output, cpuState.DebugPC, rowPart); break;
 			case RowDataType::ROMPC:
-				if (absolute != 0xFFFFFFFF) {
+				if (absolute != -1) {
 					WriteValue(output, absolute, rowPart);
 				} else {
 					altPart.Text = "";
 					altPart.DisplayInHex = false;
 					altPart.MinWidth = rowPart.MinWidth;
-					WriteValue(output, absolute, altPart);
+					WriteValue(output, altPart.Text, altPart);
 				}
 				break;
 			case RowDataType::A: WriteValue(output, cpuState.A, rowPart); break;

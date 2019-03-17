@@ -573,6 +573,7 @@ bool Debugger::ProcessRamOperation(MemoryOperationType type, uint16_t &addr, uin
 		}
 	}
 
+
 	if(absoluteAddr >= 0) {
 		if(type == MemoryOperationType::ExecOperand) {
 			_codeDataLogger->SetFlag(absoluteAddr, CdlPrgFlags::Code);
