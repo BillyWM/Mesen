@@ -6,6 +6,7 @@ This is a fork that adds features I want. Mostly around debugging / reverse engi
 Mesen is available under the GPL V3 license.  Full text here: <http://www.gnu.org/licenses/gpl-3.0.en.html>
 
 Copyright (C) 2014-2018 M. Bibaud
+
 Additional code Copyright (C) 2019 William Wenge-Murphy
 
 This program is free software: you can redistribute it and/or modify
