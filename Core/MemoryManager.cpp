@@ -160,7 +160,7 @@ void MemoryManager::DebugWrite(uint16_t addr, uint8_t value, bool disableSideEff
 	}
 }
 
-uint32_t MemoryManager::ToAbsolutePrgAddress(uint16_t ramAddr)
+int32_t MemoryManager::ToAbsolutePrgAddress(uint16_t ramAddr)
 {
 	return _mapper->ToAbsoluteAddress(ramAddr);
 }

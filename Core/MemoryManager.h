@@ -53,7 +53,7 @@ class MemoryManager : public Snapshotable
 		uint8_t Read(uint16_t addr, MemoryOperationType operationType = MemoryOperationType::Read);
 		void Write(uint16_t addr, uint8_t value);
 
-		uint32_t ToAbsolutePrgAddress(uint16_t ramAddr);
+		int32_t ToAbsolutePrgAddress(uint16_t ramAddr);
 
 		uint8_t GetOpenBus(uint8_t mask = 0xFF);
 };
